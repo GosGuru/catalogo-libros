@@ -38,13 +38,13 @@ interface ModalProps {
 
 function BookModal({ book, categories, onSave, onClose }: ModalProps) {
   const [form, setForm] = useState<Omit<Book, 'id'>>({
-    title:       book?.title       ?? '',
-    author:      book?.author      ?? '',
-    price:       book?.price       ?? 0,
-    coverType:   book?.coverType   ?? 'Tapa Blanda',
-    category:    book?.category    ?? '',
-    description: book?.description ?? '',
-    image:       book?.image       ?? '',
+    title:       book?.title       ?? EMPTY_BOOK.title,
+    author:      book?.author      ?? EMPTY_BOOK.author,
+    price:       book?.price       ?? EMPTY_BOOK.price,
+    coverType:   book?.coverType   ?? EMPTY_BOOK.coverType,
+    category:    book?.category    ?? EMPTY_BOOK.category,
+    description: book?.description ?? EMPTY_BOOK.description,
+    image:       book?.image       ?? EMPTY_BOOK.image,
   });
   const [saving, setSaving] = useState(false);
 
