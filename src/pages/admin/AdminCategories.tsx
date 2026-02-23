@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Edit2, Trash2, Check, X, Tag } from 'lucide-react';
-import { sileo } from 'sileo';
-
+import { sileo } from 'sileo';import { API } from '../../lib/api';
 interface Category {
   id: string;
   name: string;
@@ -25,8 +24,8 @@ const AdminCategories = () => {
     const load = async () => {
       try {
         const [cRes, bRes] = await Promise.all([
-          fetch('http://localhost:3001/categories'),
-          fetch('http://localhost:3001/books?_fields=id,category'),
+          fetch(`${API}/categories`),
+          fetch(`${API}/books?_fields=id,category`),
         ]);
         setCategories(await cRes.json());
         setBooks(await bRes.json());
@@ -50,7 +49,7 @@ const AdminCategories = () => {
     }
     try {
       const nextId = String(Math.max(0, ...categories.map(c => parseInt(c.id) || 0)) + 1);
-      const res = await fetch('http://localhost:3001/categories', {
+      const res = await fetch(`${API}/categories`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: nextId, name }),
@@ -68,7 +67,7 @@ const AdminCategories = () => {
     const name = editName.trim();
     if (!name || name === cat.name) { setEditId(null); return; }
     try {
-      await fetch(`http://localhost:3001/categories/${cat.id}`, {
+      await fetch(`${API}/categories/${cat.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...cat, name }),
@@ -92,7 +91,7 @@ const AdminCategories = () => {
     }
     if (!window.confirm(`¿Eliminar la categoría "${cat.name}"?`)) return;
     try {
-      await fetch(`http://localhost:3001/categories/${cat.id}`, { method: 'DELETE' });
+      await fetch(`${API}/categories/${cat.id}`, { method: 'DELETE' });
       setCategories(cs => cs.filter(c => c.id !== cat.id));
       sileo.success({ title: 'Categoría eliminada' });
     } catch {

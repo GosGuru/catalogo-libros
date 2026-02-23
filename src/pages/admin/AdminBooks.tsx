@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Edit2, Trash2, Search, X, Save } from 'lucide-react';
 import { sileo } from 'sileo';
+import { API } from '../../lib/api';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -172,8 +173,8 @@ const AdminBooks = () => {
     const load = async () => {
       try {
         const [bRes, cRes] = await Promise.all([
-          fetch('http://localhost:3001/books'),
-          fetch('http://localhost:3001/categories'),
+          fetch(`${API}/books`),
+          fetch(`${API}/categories`),
         ]);
         setBooks(await bRes.json());
         setCategories(await cRes.json());
@@ -195,7 +196,7 @@ const AdminBooks = () => {
     const editing = modal && (modal as Book).id;
     try {
       if (editing) {
-        const res = await fetch(`http://localhost:3001/books/${(modal as Book).id}`, {
+        const res = await fetch(`${API}/books/${(modal as Book).id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ ...(modal as Book), ...data }),
@@ -205,7 +206,7 @@ const AdminBooks = () => {
         sileo.success({ title: 'Libro actualizado' });
       } else {
         const nextId = String(Math.max(0, ...books.map(b => parseInt(b.id) || 0)) + 1);
-        const res = await fetch('http://localhost:3001/books', {
+        const res = await fetch(`${API}/books`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id: nextId, ...data }),
@@ -223,7 +224,7 @@ const AdminBooks = () => {
   const handleDelete = async (book: Book) => {
     if (!window.confirm(`¿Eliminar "${book.title}"?`)) return;
     try {
-      await fetch(`http://localhost:3001/books/${book.id}`, { method: 'DELETE' });
+      await fetch(`${API}/books/${book.id}`, { method: 'DELETE' });
       setBooks(bs => bs.filter(b => b.id !== book.id));
       sileo.success({ title: 'Libro eliminado' });
     } catch {

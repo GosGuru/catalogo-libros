@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, ShoppingCart, Heart } from 'lucide-react';
 import { sileo } from 'sileo';
 import { useCart } from '../context/CartContext';
+import { API } from '../lib/api';
 import { useFavorites } from '../context/FavoritesContext';
 
 interface Book {
@@ -28,7 +29,7 @@ const BookDetail = () => {
   useEffect(() => {
     const fetchBook = async () => {
       try {
-        const res = await fetch(`http://localhost:3001/books/${id}`);
+        const res = await fetch(`${API}/books/${id}`);
         if (!res.ok) throw new Error('Libro no encontrado');
         const data = await res.json();
         setBook(data);

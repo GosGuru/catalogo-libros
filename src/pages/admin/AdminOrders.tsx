@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { sileo } from 'sileo';
+import { API } from '../../lib/api';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -51,7 +52,7 @@ function OrderRow({ order, onStatusChange }: {
   const handleStatus = async (newStatus: Status) => {
     setSaving(true);
     try {
-      await fetch(`http://localhost:3001/orders/${order.id}`, {
+      await fetch(`${API}/orders/${order.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
@@ -168,7 +169,7 @@ const AdminOrders = () => {
   const [loading,    setLoading]    = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:3001/orders')
+    fetch(`${API}/orders`)
       .then(r => r.json())
       .then(data => {
         setOrders(data.sort((a: Order, b: Order) =>

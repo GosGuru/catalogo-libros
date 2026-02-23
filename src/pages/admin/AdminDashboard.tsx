@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { BookOpen, Tag, ShoppingBag, DollarSign } from 'lucide-react';
+import { API } from '../../lib/api';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -215,9 +216,9 @@ const AdminDashboard = () => {
     const fetchAll = async () => {
       try {
         const [bRes, cRes, oRes] = await Promise.all([
-          fetch('http://localhost:3001/books'),
-          fetch('http://localhost:3001/categories'),
-          fetch('http://localhost:3001/orders'),
+          fetch(`${API}/books`),
+          fetch(`${API}/categories`),
+          fetch(`${API}/orders`),
         ]);
         const [books, cats, ords] = await Promise.all([bRes.json(), cRes.json(), oRes.json()]);
         setBookCount(books.length);

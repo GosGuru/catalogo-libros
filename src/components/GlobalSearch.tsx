@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X, BookOpen, ArrowRight } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
+import { API } from '../lib/api';
 
 interface Book {
   id: string;
@@ -76,7 +77,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ isOpen, onClose }) => {
     setTimeout(() => inputRef.current?.focus(), 80);
     if (allBooks.length === 0) {
       setIsLoading(true);
-      fetch('http://localhost:3001/books')
+      fetch(`${API}/books`)
         .then(r => r.json())
         .then((data: Book[]) => {
           setAllBooks(data);

@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { API } from '../lib/api';
 import {
   Search, SlidersHorizontal, X, LayoutGrid, List,
   BookOpen, ShoppingCart, Heart, ArrowLeft,
@@ -328,8 +329,8 @@ const SearchResults = () => {
   useEffect(() => {
     setIsLoading(true);
     Promise.all([
-      fetch('http://localhost:3001/books').then((r) => r.json()),
-      fetch('http://localhost:3001/categories').then((r) => r.json()),
+      fetch(`${API}/books`).then((r) => r.json()),
+      fetch(`${API}/categories`).then((r) => r.json()),
     ])
       .then(([books, cats]: [Book[], { name: string }[]]) => {
         setAllBooks(books);

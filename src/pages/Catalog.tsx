@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Filter, ChevronDown } from 'lucide-react';
+import { API } from '../lib/api';
 
 interface Book {
   id: string;
@@ -24,8 +25,8 @@ const Catalog = () => {
     const fetchData = async () => {
       try {
         const [booksRes, categoriesRes] = await Promise.all([
-          fetch('http://localhost:3001/books'),
-          fetch('http://localhost:3001/categories')
+          fetch(`${API}/books`),
+          fetch(`${API}/categories`)
         ]);
         const booksData = await booksRes.json();
         const categoriesData = await categoriesRes.json();

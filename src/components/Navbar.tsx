@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Search, Moon, Sun, Menu, X, ShoppingCart, Heart } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
@@ -15,24 +15,12 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
 
-  // Global Ctrl+K / Cmd+K shortcut
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-        e.preventDefault();
-        setIsSearchOpen(prev => !prev);
-      }
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, []);
-
   const navLinks = [
     { name: 'Inicio', path: '/' },
     { name: 'Catálogo', path: '/catalogo' },
-    { name: 'Favoritos', path: '/favoritos' },
+   
   ];
-
+" { name: 'Favoritos', path: '/favoritos' },"
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-40 bg-white/80 dark:bg-dark-bg/80 backdrop-blur-md border-b border-gray-100 dark:border-dark-border transition-colors duration-300">
