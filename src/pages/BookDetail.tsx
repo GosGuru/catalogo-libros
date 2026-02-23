@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, ShoppingCart, Heart } from 'lucide-react';
 import { sileo } from 'sileo';
 import { useCart } from '../context/CartContext';
-import { API } from '../lib/api';
+import { BOOKS } from '../lib/data';
 import { useFavorites } from '../context/FavoritesContext';
 
 interface Book {
@@ -23,26 +23,15 @@ const BookDetail = () => {
   const navigate = useNavigate();
   const { addItem } = useCart();
   const { toggleFavorite, isFavorite } = useFavorites();
-  const [book, setBook] = useState<Book | null>(null);
-  const [loading, setLoading] = useState(true);
+  const book = (BOOKS as Book[]).find(b => b.id === id) ?? null;
+  const loading = false;
 
   useEffect(() => {
-    const fetchBook = async () => {
-      try {
-        const res = await fetch(`${API}/books/${id}`);
-        if (!res.ok) throw new Error('Libro no encontrado');
-        const data = await res.json();
-        setBook(data);
-      } catch (error) {
-        console.error(error);
-        sileo.error({ title: 'Error al cargar el libro', description: 'No se pudo encontrar el libro solicitado.' });
-        navigate('/catalogo');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchBook();
-  }, [id, navigate]);
+    if (!book) {
+      sileo.error({ title: 'Libro no encontrado', description: 'No se pudo encontrar el libro solicitado.' });
+      navigate('/catalogo');
+    }
+  }, [book, navigate]);
 
   if (loading) {
     return (

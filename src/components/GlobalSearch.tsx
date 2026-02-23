@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X, BookOpen, ArrowRight } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
-import { API } from '../lib/api';
+import { BOOKS } from '../lib/data';
 
 interface Book {
   id: string;
@@ -61,7 +61,6 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ isOpen, onClose }) => {
   const [query, setQuery] = useState('');
   const [allBooks, setAllBooks] = useState<Book[]>([]);
   const [results, setResults] = useState<Book[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
@@ -76,15 +75,8 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ isOpen, onClose }) => {
     }
     setTimeout(() => inputRef.current?.focus(), 80);
     if (allBooks.length === 0) {
-      setIsLoading(true);
-      fetch(`${API}/books`)
-        .then(r => r.json())
-        .then((data: Book[]) => {
-          setAllBooks(data);
-          setResults(data);
-        })
-        .catch(() => {})
-        .finally(() => setIsLoading(false));
+      setAllBooks(BOOKS as Book[]);
+      setResults(BOOKS as Book[]);
     } else {
       setResults(query.trim() ? filterBooks(allBooks, query) : allBooks);
     }
@@ -162,11 +154,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ isOpen, onClose }) => {
           >
             {/* ── Input row ── */}
             <div className="relative flex items-center border-b border-gray-100 dark:border-dark-border">
-              {isLoading ? (
-                <div className="absolute left-5 w-5 h-5 border-2 border-mint-500 border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <Search className="w-5 h-5 text-mint-500 absolute left-5" />
-              )}
+              <Search className="w-5 h-5 text-mint-500 absolute left-5" />
               <input
                 ref={inputRef}
                 type="text"
@@ -268,8 +256,6 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ isOpen, onClose }) => {
                     ))}
                   </ul>
                 </>
-              ) : isLoading ? (
-                <div className="p-10 text-center text-gray-400 dark:text-gray-500 text-sm">Cargando…</div>
               ) : (
                 <div className="p-10 text-center">
                   <Search className="w-10 h-10 text-gray-200 dark:text-gray-700 mx-auto mb-3" />

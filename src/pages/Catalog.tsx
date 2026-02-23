@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Filter, ChevronDown } from 'lucide-react';
-import { API } from '../lib/api';
+import { BOOKS, CATEGORIES } from '../lib/data';
 
 interface Book {
   id: string;
@@ -15,29 +15,11 @@ interface Book {
 }
 
 const Catalog = () => {
-  const [books, setBooks] = useState<Book[]>([]);
-  const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
+  const books      = BOOKS      as Book[];
+  const categories = CATEGORIES as { id: string; name: string }[];
   const [selectedCategory, setSelectedCategory] = useState<string>('Todas');
   const [selectedCover, setSelectedCover] = useState<string>('Todos');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [booksRes, categoriesRes] = await Promise.all([
-          fetch(`${API}/books`),
-          fetch(`${API}/categories`)
-        ]);
-        const booksData = await booksRes.json();
-        const categoriesData = await categoriesRes.json();
-        setBooks(booksData);
-        setCategories(categoriesData);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-    fetchData();
-  }, []);
 
   const filteredBooks = books.filter(book => {
     const categoryMatch = selectedCategory === 'Todas' || book.category === selectedCategory;

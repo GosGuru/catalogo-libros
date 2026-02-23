@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Edit2, Trash2, Check, X, Tag } from 'lucide-react';
-import { sileo } from 'sileo';import { API } from '../../lib/api';
+import { sileo } from 'sileo';
+import { API } from '../../lib/api';
+import { BOOKS, CATEGORIES } from '../../lib/data';
 interface Category {
   id: string;
   name: string;
@@ -13,28 +15,12 @@ interface Book {
 }
 
 const AdminCategories = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [books,      setBooks]      = useState<Book[]>([]);
+  const [categories, setCategories] = useState<Category[]>(CATEGORIES as Category[]);
+  const books = BOOKS as Book[];
   const [newName,    setNewName]    = useState('');
   const [editId,     setEditId]     = useState<string | null>(null);
   const [editName,   setEditName]   = useState('');
-  const [loading,    setLoading]    = useState(true);
-
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const [cRes, bRes] = await Promise.all([
-          fetch(`${API}/categories`),
-          fetch(`${API}/books?_fields=id,category`),
-        ]);
-        setCategories(await cRes.json());
-        setBooks(await bRes.json());
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
-  }, []);
+  const loading = false;
 
   const bookCount = (catName: string) =>
     books.filter(b => b.category === catName).length;

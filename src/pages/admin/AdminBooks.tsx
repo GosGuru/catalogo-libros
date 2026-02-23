@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Edit2, Trash2, Search, X, Save } from 'lucide-react';
 import { sileo } from 'sileo';
 import { API } from '../../lib/api';
+import { BOOKS, CATEGORIES } from '../../lib/data';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -162,28 +163,12 @@ function BookModal({ book, categories, onSave, onClose }: ModalProps) {
 // ─── AdminBooks Page ──────────────────────────────────────────────────────────
 
 const AdminBooks = () => {
-  const [books,      setBooks]      = useState<Book[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [books,      setBooks]      = useState<Book[]>(BOOKS as Book[]);
+  const categories = CATEGORIES as Category[];
   const [query,      setQuery]      = useState('');
   const [catFilter,  setCatFilter]  = useState('');
   const [modal,      setModal]      = useState<Partial<Book> | null | false>(false);
-  const [loading,    setLoading]    = useState(true);
-
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const [bRes, cRes] = await Promise.all([
-          fetch(`${API}/books`),
-          fetch(`${API}/categories`),
-        ]);
-        setBooks(await bRes.json());
-        setCategories(await cRes.json());
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
-  }, []);
+  const loading = false;
 
   const filtered = books.filter(b => {
     const q = query.toLowerCase();

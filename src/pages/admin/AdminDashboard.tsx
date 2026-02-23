@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { BookOpen, Tag, ShoppingBag, DollarSign } from 'lucide-react';
-import { API } from '../../lib/api';
+import { BOOKS, CATEGORIES, ORDERS } from '../../lib/data';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -205,31 +205,12 @@ function KpiCard({
 // ─── Dashboard Page ───────────────────────────────────────────────────────────
 
 const AdminDashboard = () => {
-  const [orders,    setOrders]    = useState<Order[]>([]);
-  const [bookCount, setBookCount] = useState(0);
-  const [catCount,  setCatCount]  = useState(0);
+  const orders   = ORDERS as Order[];
+  const bookCount = BOOKS.length;
+  const catCount  = CATEGORIES.length;
   const [period,    setPeriod]    = useState<ChartPeriod>('mes');
   const [metric,    setMetric]    = useState<'orders' | 'revenue'>('orders');
-  const [loading,   setLoading]   = useState(true);
-
-  useEffect(() => {
-    const fetchAll = async () => {
-      try {
-        const [bRes, cRes, oRes] = await Promise.all([
-          fetch(`${API}/books`),
-          fetch(`${API}/categories`),
-          fetch(`${API}/orders`),
-        ]);
-        const [books, cats, ords] = await Promise.all([bRes.json(), cRes.json(), oRes.json()]);
-        setBookCount(books.length);
-        setCatCount(cats.length);
-        setOrders(ords);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAll();
-  }, []);
+  const loading   = false;
 
   const now = new Date();
   const thisMonth = orders.filter(o => {

@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { API } from '../lib/api';
+import { BOOKS, CATEGORIES } from '../lib/data';
 import {
   Search, SlidersHorizontal, X, LayoutGrid, List,
   BookOpen, ShoppingCart, Heart, ArrowLeft,
@@ -314,9 +314,9 @@ const SearchResults = () => {
 
   /* Local state */
   const [inputValue, setInputValue] = useState(q);
-  const [allBooks, setAllBooks] = useState<Book[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const allBooks   = BOOKS      as Book[];
+  const categories = (CATEGORIES as { name: string }[]).map(c => c.name);
+  const isLoading  = false;
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   const { addItem } = useCart();
@@ -325,20 +325,7 @@ const SearchResults = () => {
   /* Keep input synced when URL q changes */
   useEffect(() => { setInputValue(q); }, [q]);
 
-  /* Fetch all books once */
-  useEffect(() => {
-    setIsLoading(true);
-    Promise.all([
-      fetch(`${API}/books`).then((r) => r.json()),
-      fetch(`${API}/categories`).then((r) => r.json()),
-    ])
-      .then(([books, cats]: [Book[], { name: string }[]]) => {
-        setAllBooks(books);
-        setCategories(cats.map((c) => c.name));
-      })
-      .catch(() => {})
-      .finally(() => setIsLoading(false));
-  }, []);
+
 
   const coverTypes = useMemo(
     () => Array.from(new Set(allBooks.map((b) => b.coverType))).sort(),

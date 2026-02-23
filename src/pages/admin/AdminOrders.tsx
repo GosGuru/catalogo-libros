@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { sileo } from 'sileo';
 import { API } from '../../lib/api';
+import { ORDERS } from '../../lib/data';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -164,19 +165,12 @@ function OrderRow({ order, onStatusChange }: {
 // ─── AdminOrders Page ─────────────────────────────────────────────────────────
 
 const AdminOrders = () => {
-  const [orders,     setOrders]     = useState<Order[]>([]);
+  const [orders,     setOrders]     = useState<Order[]>(
+    [...(ORDERS as Order[])].sort((a, b) =>
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+  );
   const [filter,     setFilter]     = useState<Status | 'todos'>('todos');
-  const [loading,    setLoading]    = useState(true);
-
-  useEffect(() => {
-    fetch(`${API}/orders`)
-      .then(r => r.json())
-      .then(data => {
-        setOrders(data.sort((a: Order, b: Order) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
-      })
-      .finally(() => setLoading(false));
-  }, []);
+  const loading = false;
 
   const handleStatusChange = (id: string, status: Status) =>
     setOrders(os => os.map(o => o.id === id ? { ...o, status } : o));
