@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import { Toaster } from 'sileo'
+import { Analytics } from '@vercel/analytics/react'
 import Layout from './components/Layout'
 import AdminLayout from './components/admin/AdminLayout'
 import Home from './pages/Home'
@@ -67,6 +68,7 @@ function App() {
         <Route path="/*" element={<MainSite />} />
       </Routes>
       <ThemedToaster />
+      <Analytics />
     </Router>
   )
 }

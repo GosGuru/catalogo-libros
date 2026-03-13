@@ -12,6 +12,7 @@
     "start": "npm run server & npm run dev"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.34.3",
     "json-server": "^1.0.0-beta.3",
